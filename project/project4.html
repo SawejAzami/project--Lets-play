@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>project 4</title>
+    <style>
+            *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            color: white;
+            
+            /* background-color: rgb(164, 165, 167); */
+        }
+        nav{
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            height: 40px;
+             background-color: rgb(81, 81, 83);
+            
+        }
+       button{
+            padding: 8px 25px;
+            margin: 5px 20px;
+            border-radius: 5px;
+            border: 2px;
+        }
+        nav .one{
+            background-color: rgb(84, 84, 239);
+        }
+         nav .two{
+            background-color: rgb(235, 32, 32);
+        }
+        .top-word{
+           text-align: center;
+            
+        }
+        .box{
+            height: 500px;
+            width: 600px;
+            background-color: rgb(50, 52, 52);         
+        }
+        .outer-box{
+            display: flex;
+            justify-content: center;
+            align-items: center;    
+            text-align: center;       
+        }
+        p{
+            margin-top: 3%;
+        }
+       .big-font{
+        font-size: 50px;
+        margin-top: 7%;
+       }
+    input{
+     
+            outline-style: none;
+            border: 2px ;
+            text-align: center;
+            text-align: center;
+            border-radius: 15px;
+            padding: 10px;color: black;
+            font-size: 15px;
+            margin: 20px;
+
+        }
+
+       
+       input[type="submit"]{
+        background-color: rgb(81, 81, 83);
+        padding: 12px 25px;
+        color: white;
+       }
+       a{
+            text-decoration: none;
+        }
+      
+
+    </style>
+</head>
+<body>
+    <nav>
+        <button onclick="one()" class="button one"><a href="./project.html">Home</a></button>
+        <button class="button two">YouTube</button>
+    </nav>
+
+    <div class="top-word"><h1>Number guessing game</h1></div>
+
+   <div class="outer-box">
+    <div class="box">
+            <p>Try ad guess a random number between 1 and 100</p>
+            <p> You have attemp to guess the right number</p>
+
+            <div class="big-font">
+                <p>Guess a number</p>
+            </div>
+
+           <form action="">
+            <input class="userNum" type="text"> <br>
+            <input class="submit" type="submit" value="Submit guess">
+
+           </form>
+
+           <div class="result">
+            <p >Previous Guess: <span class="Previous"></span></p>
+            <p >Guess Remainning: <span class="remainning">10</span></p>
+            <p class="low-high"></p>
+           </div>
+          
+
+
+    </div>
+   </div>
+   <!-- script -->
+   <script>
+    let randomNumber=parseInt(Math.floor(Math.random()*100+1))
+    const userInput=document.querySelector(".userNum")
+    const submit=document.querySelector(".submit")
+    const remaining=document.querySelector(".remainning")
+    const guessSlot=document.querySelector(".Previous")
+    const lowOrHi=document.querySelector(".low-high")
+    const startOver=document.querySelector(".result")
+
+    const p= document.createElement('p') 
+
+    let  prevGuess=[]  // to the user what he insert previous
+    let numGuess=1  //number of attempt and disable the submit after 10 atempt
+     let playGame=true  // to start the game , first check the condition
+
+     if(playGame){
+        submit.addEventListener('click',function(e){
+            e.preventDefault()
+            const guess=parseInt(userInput.value)
+            // console.log(guess);
+            validateGuess(guess)
+        });
+     }
+     
+
+     function validateGuess(guess){  // to check the guess is number or any other type(string)
+        if(isNaN(guess)){
+            alert('please enter a valid number')
+        }
+        else if(guess<1){
+            alert('please enter a number greater than 1')
+        }
+        else if(guess>100){
+            alert('please enter a  number less than 100')
+        }
+        else{
+            prevGuess.push(guess)
+            if(numGuess===11){
+                displayGuess(guess)
+                displayMessage(`Game over.rondom number was ${randomNumber}`)
+                endGame()
+            }
+            else{
+                displayGuess(guess)
+                checkGuess(guess)
+            }
+        }
+     }
+
+     function checkGuess(guess){  // guess is ture or high or low
+         
+        if(guess===randomNumber){
+            displayMessage(`you guessed is right`)
+            endGame()
+        }
+        else if(guess<randomNumber){
+            displayMessage(`Number is TOOO low`)
+        }
+        else if(guess>randomNumber){
+            displayMessage(`Number is TOOO high`)
+        }
+     }
+
+     function displayMessage(message){
+        lowOrHi.innerHTML=`<h2>${message}</h2>`
+     }
+     function displayGuess(guess){
+        userInput.value=''
+        guessSlot.innerHTML+=`${guess} ,`
+        numGuess++;
+        remaining.innerHTML=`${11-numGuess}`
+        
+     }
+     function endGame(){
+        userInput.value='';
+        userInput.setAttribute('disabled','');
+        p.classList.add('button');
+        p.innerHTML=`<h2 id="newgame">Click to Start new game</h2>`;
+        startOver.appendChild(p)    
+        playGame=false
+        newGame()
+     }
+     function newGame(){
+       const newGameButton= document.querySelector('#newgame')
+       newGameButton.addEventListener('click',function(e){
+       randomNumber=parseInt(Math.floor(Math.random()*100+1))
+       prevGuess=[]
+       numGuess=1
+       guessSlot.innerHTML=''
+       remaining.innerHTML=`${11-numGuess}`;
+       userInput.removeAttribute('disabled')
+       startOver.removeChild(p)
+       playGame=true
+       })
+     }
+   
+
+   </script>
+</body>
+</html>
